@@ -1,0 +1,1 @@
+export const SectionLine = () => <div className="h-px bg-slate-700" />
