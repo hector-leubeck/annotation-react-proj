@@ -1,10 +1,10 @@
 import { Logo } from './Logo'
 import { SearchBar } from './SearchBar'
-import { SectionLine } from './SectionLine.tsx'
+import logo from '../assets/logo-nlw-blkngry.svg'
 
 export const Header = () => 
     <>
-        <Logo />
+        <Logo imgPath={logo}/>
         <SearchBar />
-        <SectionLine />
+        <div className="h-px bg-slate-700" />
     </>

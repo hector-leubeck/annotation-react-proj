@@ -1,3 +1,4 @@
-import logo from '../assets/logo-nlw-blkngry.svg'
+type LogoProps = {imgPath:string}
 
-export const Logo = () => <img src={logo} alt='NLW Expert'/>
+
+export const Logo = ({imgPath}:LogoProps) => <img src={imgPath} alt='NLW Expert'/>
