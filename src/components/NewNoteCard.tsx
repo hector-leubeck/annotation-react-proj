@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 export const NewNoteCard = () => (
   <Dialog.Root>
-    <Dialog.Trigger className="rounded-md flex flex-col text-left bg-slate-700 p-5 gap-3 hover:ring-2 hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400 outline-none">
+    <Dialog.Trigger className="rounded-md flex flex-col text-left bg-slate-700 p-5 gap-3">
       <span className="text-sm font-medium text-slate-200">Adicionar Nota</span>
       <p className="text-sm leading-6 text-slate-400">
         Grave uma nota em audio que será convertida automaticamente para texto.
