@@ -12,7 +12,7 @@ export const App = () => {
   };
 
   return (
-    <div className="mx-auto max-w-6xl my-12 space-y-6">
+    <div className="mx-auto max-w-6xl my-12 space-y-6 px-5 md:px-0">
       <>
         <img src={logo} alt="NLW Expert" />
         <form className="w-full">
