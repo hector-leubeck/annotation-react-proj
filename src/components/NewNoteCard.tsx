@@ -7,9 +7,12 @@ interface NewNoteCardProps {
   onNewNoteSaved: (text: string) => void;
 }
 
+let speechRecognition: SpeechRecognition | null = null;
+
 export const NewNoteCard = ({ onNewNoteSaved }: NewNoteCardProps) => {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
   const [content, setContent] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleTextEditor = () => setShouldShowOnboarding(false);
 
@@ -22,10 +25,61 @@ export const NewNoteCard = ({ onNewNoteSaved }: NewNoteCardProps) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+
+    if (content === "") {
+      toast.error("Mensagem vazia!");
+      return;
+    }
+
     onNewNoteSaved(content);
     setContent("");
     setShouldShowOnboarding(true);
     toast.success("Nota criada com sucesso!");
+  };
+
+  const handleStartRecording = () => {
+    const isSpeechRecognitionAPIAvailable =
+      "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+
+    if (!isSpeechRecognitionAPIAvailable) {
+      toast.error("Seu navegador não suporta esta funcionalidade.");
+      return;
+    }
+
+    setIsRecording(true);
+    setShouldShowOnboarding(false);
+
+    const speechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    speechRecognition = new speechRecognitionAPI();
+
+    speechRecognition.lang = "pt-BR";
+    speechRecognition.continuous = true;
+    speechRecognition.maxAlternatives = 1;
+    speechRecognition.interimResults = true;
+
+    speechRecognition.onresult = (event) => {
+      const transcription = Array.from(event.results).reduce((text, result) => {
+        return text.concat(result[0].transcript);
+      }, "");
+
+      setContent(transcription);
+    };
+
+    speechRecognition.onerror = (event) => {
+      console.error(event);
+    };
+
+    speechRecognition.start();
+  };
+
+  const handleStopRecording = () => {
+    setIsRecording(false);
+
+    if (speechRecognition !== null) {
+      speechRecognition.stop();
+    }
   };
 
   return (
@@ -46,7 +100,7 @@ export const NewNoteCard = ({ onNewNoteSaved }: NewNoteCardProps) => {
             <X className="size-5 " />
           </Dialog.Close>
 
-          <form className="flex flex-1 flex-col" onSubmit={handleSubmit}>
+          <form className="flex flex-1 flex-col">
             <div className="flex flex-1 flex-col gap-3 p-5">
               <span className="text-sm font-medium text-slate-200">
                 Adicionar nova nota
@@ -56,6 +110,7 @@ export const NewNoteCard = ({ onNewNoteSaved }: NewNoteCardProps) => {
                 <p className="text-sm leading-6 text-slate-300">
                   Comece a{" "}
                   <button
+                    onClick={handleStartRecording}
                     type="button"
                     className="text-lime-400 font-medium hover:underline"
                   >
@@ -80,12 +135,25 @@ export const NewNoteCard = ({ onNewNoteSaved }: NewNoteCardProps) => {
                 />
               )}
             </div>
-            <button
-              type="submit"
-              className="w-ful bg-lime-400 py-4 text-center text-sm text-lime-950 font-medium outline-none hover:bg-lime-500"
-            >
-              Salvar Nota
-            </button>
+
+            {isRecording ? (
+              <button
+                type="button"
+                onClick={handleStopRecording}
+                className="w-ful flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-sm text-slate-300 font-medium outline-none hover:text-slate-100"
+              >
+                <div className="size-3 rounded-full bg-red-600 shadow-red-500 shadow-sm animate-pulse" />
+                Interromper Gravação
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                type="button"
+                className="w-ful bg-lime-400 py-4 text-center text-sm text-lime-950 font-medium outline-none hover:bg-lime-500"
+              >
+                Salvar Nota
+              </button>
+            )}
           </form>
         </Dialog.Content>
       </Dialog.Portal>

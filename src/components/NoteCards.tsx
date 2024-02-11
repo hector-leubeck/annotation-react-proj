@@ -17,7 +17,6 @@ export const NoteCards = ({ note }: NoteCardsProps) => {
         <span className="text-sm font-medium text-slate-200">
           {formatDistanceToNow(note.date, { locale: ptBR, addSuffix: true })}
         </span>
-        research
         <p className="text-sm leading-6 text-slate-300">{note.text}</p>
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-black/0 pointer-events-none" />
       </Dialog.Trigger>
