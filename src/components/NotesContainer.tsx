@@ -2,13 +2,17 @@ import { Key, useState } from "react";
 import { NewNoteCard } from "./NewNoteCard";
 import { NoteCards } from "./NoteCards";
 
+interface ResearchProps {
+  research: string;
+}
+
 interface Note {
   id: String;
   date: Date;
   text: String;
 }
 
-export const NotesContainer = () => {
+export const NotesContainer = ({ research }: ResearchProps) => {
   const [notes, setNotes] = useState<Note[]>(() => {
     const notesOnStorage = localStorage.getItem("notes");
 
@@ -32,11 +36,18 @@ export const NotesContainer = () => {
     localStorage.setItem("notes", JSON.stringify(notesArr));
   }
 
+  const filteredNotes =
+    research !== ""
+      ? notes.filter((note) =>
+          note.text.toLocaleLowerCase().includes(research.toLocaleLowerCase())
+        )
+      : notes;
+
   return (
     <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
       <NewNoteCard onNewNoteSaved={onNewNoteSaved} />
 
-      {notes.map((note) => (
+      {filteredNotes.map((note) => (
         <NoteCards key={note.id as Key} note={note} />
       ))}
     </div>
