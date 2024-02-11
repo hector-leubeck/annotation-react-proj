@@ -22,6 +22,15 @@ export const NotesContainer = ({ research }: ResearchProps) => {
     return [];
   });
 
+  function onNoteDeleted(id: string) {
+    const notesArr = notes.filter((note) => {
+      return note.id !== id;
+    });
+
+    setNotes(notesArr);
+    localStorage.setItem("notes", JSON.stringify(notesArr));
+  }
+
   function onNewNoteSaved(text: string) {
     const newNote = {
       id: crypto.randomUUID(),
@@ -48,7 +57,11 @@ export const NotesContainer = ({ research }: ResearchProps) => {
       <NewNoteCard onNewNoteSaved={onNewNoteSaved} />
 
       {filteredNotes.map((note) => (
-        <NoteCards key={note.id as Key} note={note} />
+        <NoteCards
+          key={note.id as Key}
+          note={note}
+          onNoteDeleted={onNoteDeleted}
+        />
       ))}
     </div>
   );

@@ -5,12 +5,14 @@ import { X } from "lucide-react";
 
 type NoteCardsProps = {
   note: {
+    id: string;
     date: Date;
     text: String;
   };
+  onNoteDeleted: (id: string) => void;
 };
 
-export const NoteCards = ({ note }: NoteCardsProps) => {
+export const NoteCards = ({ note, onNoteDeleted }: NoteCardsProps) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger className="rounded-md text-left bg-slate-800 p-5  outline-none flex flex-col gap-3 overflow-hidden relative hover: ring-2 hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400">
@@ -36,6 +38,7 @@ export const NoteCards = ({ note }: NoteCardsProps) => {
             <p className="text-sm leading-6 text-slate-300">{note.text}</p>
           </div>
           <button
+            onClick={() => onNoteDeleted(note.id)}
             type="button"
             className="w-ful bg-slate-800 py-4 text-center text-sm text-red-400 font-medium outline-none hover:underline"
           >
